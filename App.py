@@ -16,7 +16,7 @@ TimeSetting = st.sidebar.radio(
     ["1 Minute", "5 Minutes" , "15 Minutes", "30 Minutes", "1 Hour"],
     index=None,
 )
-st.sidebar.write(":", TimeSetting)
+st.sidebar.write("You selected:", TimeSetting)
 #  end of sidebar settings
 
 st.title('Time Table')
