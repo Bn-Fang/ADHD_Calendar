@@ -21,20 +21,6 @@ st.sidebar.write("You selected:", TimeSetting)
 
 st.title('Time Table')
 
-# st.sidebar.time_input("Meeting time")
-
-day1, day2, day3, day4, day5, day6, day7 = st.columns(7)
-
-
-#     elif mode == "timegrid":
-        # calendar_options = {
-        #     **calendar_options,
-        #     "initialView": "timeGridWeek",
-        #     "slotDuration": "00:01",
-        #     "slotLabelInterval": "00:01:00",
-        # }
-        
-
 
 calendar_options = {
     "editable": "true",
