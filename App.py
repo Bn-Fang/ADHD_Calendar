@@ -2,25 +2,21 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from streamlit_calendar import calendar
-
 import time
 
-
-
-# Sidebar settings
+# Start Sidebar Settings
 st.sidebar.title("Settings")
 st.sidebar.write("---")
 
 TimeSetting = st.sidebar.radio(
     "How do you want to subdivide your time?",
-    ["1 Minute", "5 Minutes" , "15 Minutes", "30 Minutes", "1 Hour"],
+    ["1 Minute", "5 Minutes", "15 Minutes", "30 Minutes", "1 Hour"],
     index=None,
 )
 st.sidebar.write("You selected:", TimeSetting)
-#  end of sidebar settings
+# End Sidebar Settings
 
-st.title('Time Table')
-
+st.title("Time Table")
 
 calendar_options = {
     "editable": "true",
@@ -28,35 +24,35 @@ calendar_options = {
     "selectable": "true",
 }
 
-if (TimeSetting == "1 Minute"):
+if TimeSetting == "1 Minute":
     calendar_options = {
         **calendar_options,
         "initialView": "timeGridWeek",
         "slotDuration": "00:01",
         "slotLabelInterval": "00:01:00",
     }
-elif (TimeSetting == "5 Minutes"):
+elif TimeSetting == "5 Minutes":
     calendar_options = {
         **calendar_options,
         "initialView": "timeGridWeek",
         "slotDuration": "00:05",
         "slotLabelInterval": "00:01:00",
     }
-elif (TimeSetting == "15 Minutes"):
+elif TimeSetting == "15 Minutes":
     calendar_options = {
-    **calendar_options,
-    "initialView": "timeGridWeek",
-    "slotDuration": "00:15",
-    "slotLabelInterval": "00:01:00",
-}
-elif (TimeSetting == "30 Minutes"):
+        **calendar_options,
+        "initialView": "timeGridWeek",
+        "slotDuration": "00:15",
+        "slotLabelInterval": "00:01:00",
+    }
+elif TimeSetting == "30 Minutes":
     calendar_options = {
         **calendar_options,
         "initialView": "timeGridWeek",
         "slotDuration": "00:30",
         "slotLabelInterval": "00:01:00",
     }
-elif (TimeSetting == "1 Hour"):
+elif TimeSetting == "1 Hour":
     calendar_options = {
         **calendar_options,
         "initialView": "timeGridWeek",
@@ -65,31 +61,224 @@ elif (TimeSetting == "1 Hour"):
     }
 else:
     calendar_options = {
-    **calendar_options,
-    "initialView": "timeGridWeek",
-    "slotDuration": "00:15",
-    "slotLabelInterval": "00:01:00",
-}   
+        **calendar_options,
+        "initialView": "timeGridWeek",
+        "slotDuration": "01:00",
+        "slotLabelInterval": "00:01:00",
+    }
+
+
+# Custom Format Function For Select Box
+def format_option(option):
+    if option == "dayGridMonth":
+        return "📅 Month View"
+    elif option == "timeGridWeek":
+        return "🗓️ Week View"
+    elif option == "timeGridDay":
+        return "📆 Day View"
+    elif option == "listMonth":
+        return "📝 List View"
+
+
+# Adding Different Calendar Views
+selected_view = st.selectbox(
+    "Select Calendar View:",
+    ["dayGridMonth", "timeGridWeek", "timeGridDay", "listMonth"],
+    format_func=format_option,
+    index=1,
+)
+calendar_options["initialView"] = selected_view
+
+# Custom CSS For Calendar
+calendar_css = """
+/* Custom Styles For Buttons */
+.fc-today-button {
+    width: 85px;
+    height: 40px;
+    border-radius: 5px;
+    font-family: Lato, sans-serif;
+    text-transform: capitalize;
+    border: none;
+    background: linear-gradient(0deg, rgb(255, 27, 0) 0%, rgb(251, 75, 2) 100%);
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    position: relative;
+    box-shadow: rgba(255, 255, 255, 0.5) 2px 2px 2px 0px inset, rgba(0, 0, 0, 0.1) 7px 7px 20px 0px, rgba(0, 0, 0, 0.1) 4px 4px 5px 0px;
+    outline: none;
+}
+
+.fc-today-button:hover {
+    color: #ffffff;
+    background: linear-gradient(0deg, rgba(0, 172, 238, 1) 0%, rgba(2, 126, 251, 1) 100%);
+    border: none;
+    box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
+}
+
+.fc-today-button:focus {
+    box-shadow: rgba(255, 255, 255, 0.5) 2px 2px 2px 0px inset, rgba(0, 0, 0, 0.1) 7px 7px 20px 0px, rgba(0, 0, 0, 0.1) 4px 4px 5px 0px !important;
+}
+
+.fc-button-group {
+    gap: 12px;
+}
+
+.fc-prev-button, .fc-next-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000000;
+    border-radius: 50% !important;
+    background: #000000;
+    text-decoration: none;
+}
+
+.fc-prev-button:hover, .fc-next-button:hover {
+    animation: shake .35s linear;
+}
+
+@keyframes shake {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(15deg);
+    }
+    50% {
+        transform: rotate(0deg);
+    }
+    75% {
+        transform: rotate(-15deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+
+/* Custom Styles For Aalendar Container */
+.fc {
+    /* Main Styles */
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+
+    /* Table Header Padding */
+    .fc-col-header-cell {
+        padding: 2px 20px;
+    }
+
+
+    /* Today's Date Color */
+    .fc-col-header-cell.fc-day-today {
+        color: #fff;
+        background-color: rgb(26, 115, 232);
+    }
+
+    .fc-day-today {
+        background-color: #039be573;
+    }
+
+    .fc-highlight {
+        background: #039be5;
+    }
+
+
+    /* Toolbar Styles */
+    .fc-header-toolbar {
+        background-color: #fff !important;
+    }
+
+    .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 1em !important;
+    }
+
+    .fc-toolbar-title {
+        background: linear-gradient(to right, #fe5e5e, #cb00e2, #036fe6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .fc-header-toolbar {
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+    }
+
+    .fc-toolbar-title {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+
+    /* Table Body Padding & Styles */
+    .fc-timegrid-slot {
+        height: 2.5em;
+    }
+
+    .fc-timegrid-axis-cushion {
+        text-transform: capitalize;
+    }
+
+    .fc-timegrid-axis.fc-scrollgrid-shrink {
+        background: #fff0b6;
+    }
+
+    .fc-timegrid-slot-label-cushion {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .fc-timegrid-slot-label.fc-scrollgrid-shrink {
+        background: #fff0b6;
+    }
+
+
+    /* Scrollbar Styles */
+    .fc-scroller-harness > .fc-scroller {
+        overflow: auto !important;
+    }
+
+    .fc-scroller-liquid-absolute::-webkit-scrollbar-track
+    {
+        background-color: #fff;
+        border-radius: 10px;
+    }
+
+    .fc-scroller-liquid-absolute::-webkit-scrollbar
+    {
+        width: 10px;
+        background-color: #fff;
+    }
+
+    .fc-scroller-liquid-absolute::-webkit-scrollbar-thumb
+    {
+        border-radius: 10px;
+        margin-right: 10px;
+        background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44, rgb(122,153,217)), color-stop(0.72, rgb(73,125,189)), color-stop(0.86, rgb(28,58,148)));
+    }
+}
+"""
+
+# Add Custom Options
 state = calendar(
     options=calendar_options,
-    custom_css="""
-    .fc-event-past {
-        opacity: 0.8;
-    }
-    .fc-event-time {
-        font-style: italic;
-    }
-    .fc-event-title {
-        font-weight: 700;
-    }
-    .fc-toolbar-title {
-        font-size: 2rem;
-    }
-    """,
+    custom_css=calendar_css,
 )
 
+# Custom CSS For Page
+page_css = """
+/* Custom Styles For The Select Box */
+.st-c3 > .st-co {
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #dddddd;
+    border-radius: 0px;
+}
+"""
 
-
-
-
-
+# Render Custom CSS
+st.markdown(f"<style>{page_css}</style>", unsafe_allow_html=True)
