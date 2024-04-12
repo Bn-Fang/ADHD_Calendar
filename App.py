@@ -22,8 +22,6 @@ st.sidebar.write("You selected:", TimeSetting)
 # End Sidebar Settings
 
 
-
-
 def create_event(eventDiscription, start, end ):
     # date = datetime.now().date()
     # today = datetime(date.year, date.month, date.day, 10) + timedelta(days=0)
@@ -44,8 +42,7 @@ def create_event(eventDiscription, start, end ):
     st.write("Summary: ", event_result['summary'])
     st.write("Starts At: ", event_result['start']['dateTime'])
     st.write("Ends At: ", event_result['end']['dateTime'])
-   
-    
+
 with maker:
     st.title("Streamlit Oauth Login")
     loggedIn = False
@@ -58,14 +55,13 @@ with maker:
     else:
         st.write("You're not logged in")
         loggedIn = False
-    
-    
+
     if loggedIn == True:
         with st.form(key='my_form'):
             description = st.text_input("Describe the event: ")
             date, time= st.columns(2)
             submit_button = st.form_submit_button(label='Submit')
-            
+
             with date:
                 startDate = st.date_input("Select Date", key=10)
                 endDate = st.date_input("Select endDate")
@@ -76,15 +72,11 @@ with maker:
             start = startDate.isoformat()
             endDate = datetime.combine(endDate, endTime)
             end = endDate.isoformat()
-            
-            
-            
+
             if submit_button:
                 print(description, start, end)
                 create_event(description, start, end)    
                 st.write("Event Created")
-        
- 
 
 # Custom CSS For Calendar
 calendar_css = """
@@ -159,9 +151,8 @@ calendar_css = """
 .fc {
     /* Main Styles */
     color: #262730;
-    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #FEF5F3;
+    background-color: #FFFFF8;
 
     /* Table Header Padding */
     .fc-col-header-cell {
@@ -170,23 +161,19 @@ calendar_css = """
 
 
     /* Today's Date Color */
-    .fc-col-header-cell.fc-day-today {
-        color: #fff;
-        background-color: #FEECD2;
-    }
 
     .fc-day-today {
-        background-color: #FEECD2;
+        background-color: #fffce1;
     }
 
     .fc-highlight {
-        background: #FDDBA9;
+        background: #FFFAC2;
     }
 
 
     /* Toolbar Styles */
     .fc-header-toolbar {
-        background-color: #FEF5F3 !important;
+        background-color: #FFFFE8 !important;
     }
 
     .fc-toolbar.fc-header-toolbar {
@@ -244,7 +231,6 @@ calendar_css = """
     }
 }
 """
-
 
 
 # Custom CSS For Page
