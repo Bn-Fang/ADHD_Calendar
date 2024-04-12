@@ -152,7 +152,7 @@ calendar_css = """
     /* Main Styles */
     color: #262730;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #FFFFF8;
+    background-color: rgb(255, 255, 225);
 
     /* Table Header Padding */
     .fc-col-header-cell {
@@ -163,17 +163,17 @@ calendar_css = """
     /* Today's Date Color */
 
     .fc-day-today {
-        background-color: #fffce1;
+        background-color: #fff9c8;
     }
 
     .fc-highlight {
-        background: #FFFAC2;
+        background: #fff6af;
     }
 
 
     /* Toolbar Styles */
     .fc-header-toolbar {
-        background-color: #FFFFE8 !important;
+        background-color: rgb(255, 255, 210) !important;
     }
 
     .fc-toolbar.fc-header-toolbar {
