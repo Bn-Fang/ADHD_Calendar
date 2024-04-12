@@ -108,7 +108,7 @@ calendar_css = """
 
 .fc-today-button:hover {
     color: #ffffff;
-    background: linear-gradient(0deg, rgba(0, 172, 238, 1) 0%, rgba(2, 126, 251, 1) 100%);
+    background: linear-gradient(0deg, rgb(255, 27, 0) 100%, rgb(251, 75, 2) 0%);
     border: none;
     box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
 }
@@ -134,6 +134,8 @@ calendar_css = """
 }
 
 .fc-prev-button:hover, .fc-next-button:hover {
+    background: #ccc;
+    border-color: #ccc;
     animation: shake .35s linear;
 }
 
@@ -173,15 +175,15 @@ calendar_css = """
     /* Today's Date Color */
     .fc-col-header-cell.fc-day-today {
         color: #fff;
-        background-color: rgb(26, 115, 232);
+        background-color: #FEECD2;
     }
 
     .fc-day-today {
-        background-color: #039be573;
+        background-color: #FEECD2;
     }
 
     .fc-highlight {
-        background: #039be5;
+        background: #FDDBA9;
     }
 
 
@@ -243,13 +245,6 @@ calendar_css = """
         background-color: #fff;
         border-radius: 10px;
     }
-
-    .fc-scroller-liquid-absolute::-webkit-scrollbar-thumb
-    {
-        border-radius: 10px;
-        margin-right: 10px;
-        background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44, rgb(122,153,217)), color-stop(0.72, rgb(73,125,189)), color-stop(0.86, rgb(28,58,148)));
-    }
 }
 """
 
@@ -261,6 +256,9 @@ state = calendar(
 
 # Custom CSS For Page
 page_css = """
+.st-c3 > .st-co {
+    cursor: pointer;
+}
 """
 
 # Render Custom CSS
