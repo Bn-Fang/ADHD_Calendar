@@ -71,13 +71,13 @@ else:
 # Custom Format Function For Select Box
 def format_option(option):
     if option == "dayGridMonth":
-        return "📅 Month View"
+        return "🈷️ Month"
     elif option == "timeGridWeek":
-        return "🗓️ Week View"
+        return "🗓️ Week"
     elif option == "timeGridDay":
-        return "📆 Day View"
+        return "📅 Day"
     elif option == "listMonth":
-        return "📝 List View"
+        return "📈 List"
 
 
 # Adding Different Calendar Views
@@ -95,8 +95,7 @@ calendar_css = """
 .fc-today-button {
     width: 85px;
     height: 40px;
-    border-radius: 5px;
-    font-family: Lato, sans-serif;
+    border-radius: 10px;
     text-transform: capitalize;
     border: none;
     background: linear-gradient(0deg, rgb(255, 27, 0) 0%, rgb(251, 75, 2) 100%);
@@ -109,7 +108,7 @@ calendar_css = """
 
 .fc-today-button:hover {
     color: #ffffff;
-    background: linear-gradient(0deg, rgba(0, 172, 238, 1) 0%, rgba(2, 126, 251, 1) 100%);
+    background: linear-gradient(0deg, rgb(255, 27, 0) 100%, rgb(251, 75, 2) 0%);
     border: none;
     box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5), 7px 7px 20px 0px rgba(0,0,0,.1), 4px 4px 5px 0px rgba(0,0,0,.1);
 }
@@ -128,13 +127,15 @@ calendar_css = """
     justify-content: center;
     width: 40px;
     height: 40px;
-    border: 1px solid #000000;
+    border: 1px solid #ccc;
     border-radius: 50% !important;
-    background: #000000;
+    background: #ccc;
     text-decoration: none;
 }
 
 .fc-prev-button:hover, .fc-next-button:hover {
+    background: #ccc;
+    border-color: #ccc;
     animation: shake .35s linear;
 }
 
@@ -157,14 +158,13 @@ calendar_css = """
 }
 
 
-/* Custom Styles For Aalendar Container */
+/* Custom Styles For Calendar Container */
 .fc {
     /* Main Styles */
-    font-family: 'Arial', sans-serif;
-    color: #333;
+    color: #262730;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
+    background-color: #FEF5F3;
 
     /* Table Header Padding */
     .fc-col-header-cell {
@@ -175,29 +175,29 @@ calendar_css = """
     /* Today's Date Color */
     .fc-col-header-cell.fc-day-today {
         color: #fff;
-        background-color: rgb(26, 115, 232);
+        background-color: #FEECD2;
     }
 
     .fc-day-today {
-        background-color: #039be573;
+        background-color: #FEECD2;
     }
 
     .fc-highlight {
-        background: #039be5;
+        background: #FDDBA9;
     }
 
 
     /* Toolbar Styles */
     .fc-header-toolbar {
-        background-color: #fff !important;
+        background-color: #FEF5F3 !important;
     }
 
     .fc-toolbar.fc-header-toolbar {
-        margin-bottom: 1em !important;
+        margin-bottom: 0em !important;
     }
 
     .fc-toolbar-title {
-        background: linear-gradient(to right, #fe5e5e, #cb00e2, #036fe6);
+        background: #262730;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -205,18 +205,18 @@ calendar_css = """
     .fc-header-toolbar {
         padding: 10px;
         background-color: #f0f0f0;
-        border: 1px solid #ddd;
+        border-radius: 10px;
     }
 
     .fc-toolbar-title {
-        font-size: 20px;
+        color: #262730;
         font-weight: bold;
     }
 
 
     /* Table Body Padding & Styles */
     .fc-timegrid-slot {
-        height: 2.5em;
+        height: 2em;
     }
 
     .fc-timegrid-axis-cushion {
@@ -224,7 +224,6 @@ calendar_css = """
     }
 
     .fc-timegrid-axis.fc-scrollgrid-shrink {
-        background: #fff0b6;
     }
 
     .fc-timegrid-slot-label-cushion {
@@ -233,7 +232,6 @@ calendar_css = """
     }
 
     .fc-timegrid-slot-label.fc-scrollgrid-shrink {
-        background: #fff0b6;
     }
 
 
@@ -247,19 +245,6 @@ calendar_css = """
         background-color: #fff;
         border-radius: 10px;
     }
-
-    .fc-scroller-liquid-absolute::-webkit-scrollbar
-    {
-        width: 10px;
-        background-color: #fff;
-    }
-
-    .fc-scroller-liquid-absolute::-webkit-scrollbar-thumb
-    {
-        border-radius: 10px;
-        margin-right: 10px;
-        background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.44, rgb(122,153,217)), color-stop(0.72, rgb(73,125,189)), color-stop(0.86, rgb(28,58,148)));
-    }
 }
 """
 
@@ -271,12 +256,8 @@ state = calendar(
 
 # Custom CSS For Page
 page_css = """
-/* Custom Styles For The Select Box */
 .st-c3 > .st-co {
     cursor: pointer;
-    background-color: #fff;
-    border: 1px solid #dddddd;
-    border-radius: 0px;
 }
 """
 
