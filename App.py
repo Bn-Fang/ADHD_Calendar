@@ -173,7 +173,7 @@ calendar_css = """
 
     /* Toolbar Styles */
     .fc-header-toolbar {
-        background-color: rgb(255, 255, 210) !important;
+        background-color: rgb(255, 255, 225) !important;
     }
 
     .fc-toolbar.fc-header-toolbar {
