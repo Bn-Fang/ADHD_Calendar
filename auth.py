@@ -3,7 +3,6 @@ import os
 from numpy import void
 import streamlit as st
 import asyncio
-# https://frankie567.github.io/httpx-oauth/oauth2/
 from httpx_oauth.clients.google import GoogleOAuth2
 from dotenv import load_dotenv
 import json

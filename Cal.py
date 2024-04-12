@@ -1,6 +1,8 @@
 '''
 Before Starting using Google OAuth SDK for Python, install
 pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+for errors with the crypto module
+pip uninstall pycryptodome
 first.
 '''
 
@@ -204,5 +206,5 @@ def delete_event():
 #         update_event()
 #     elif c == '5':
 #         delete_event()
-#     else:
+#     else:ß
 #         break
