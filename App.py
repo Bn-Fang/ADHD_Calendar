@@ -151,7 +151,10 @@ calendar_css = """
 .fc {
     /* Main Styles */
     color: #262730;
-    border-radius: 10px;
+    border-top-left-radius: 10px; /* 10px radius on the top left corner */
+    border-top-right-radius: 10px; /* 10px radius on the top right corner */
+    border-bottom-left-radius: 0; /* No radius on the bottom left corner */
+    border-bottom-right-radius: 0; /* No radius on the bottom right corner */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: rgb(255, 255, 225);
 
