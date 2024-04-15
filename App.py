@@ -3,7 +3,8 @@ from streamlit_calendar import calendar
 from auth import *
 from Cal import get_calendar_service
 from datetime import datetime, timedelta
-
+import base64
+import plotly.express as px
 
 # making seperate tabs
 viewer, maker = st.tabs(["View Calendar", "Make Events"])
@@ -177,6 +178,7 @@ calendar_css = """
 
     /* Toolbar Styles */
     .fc-header-toolbar {
+        border-radius: 10px;
         background-color: rgb(255, 255, 225) !important;
     }
 
@@ -236,17 +238,8 @@ calendar_css = """
 }
 """
 
-
-# Custom CSS For Page
-page_css = """
-.st-c3 > .st-co {
-    cursor: pointer;
-}
-"""
-
-
 with viewer:
-    st.title("Calandar Viewer")
+    st.title("Calendar Viewer")
     calendar_options = {
         "editable": "true",
         "navLinks": "true",
@@ -318,5 +311,38 @@ with viewer:
         custom_css=calendar_css,
     )
 
+
+df = px.data.iris()
+
+@st.cache_data
+def get_img_as_base64(file):
+    with open(file, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+
+img = get_img_as_base64("img.jpg")
+
+# Custom CSS For Page
+page_css = f"""
+    <style>
+        [data-testid="stAppViewContainer"] > .main {{
+            background-image: url("data:image/png;base64,{img}");
+            background-size: 90%;
+            background-position: bottom;
+            background-repeat: no-repeat;
+            background-attachment: local;
+        }}
+
+        [data-testid="stHeader"] {{
+            background: rgba(0,0,0,0);
+        }}
+
+        [data-testid="stToolbar"] {{
+            right: 2rem;
+        }}
+    </style>
+"""
+
 # Render Custom CSS
-st.markdown(f"<style>{page_css}</style>", unsafe_allow_html=True)
+st.markdown(page_css, unsafe_allow_html=True)
