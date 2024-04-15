@@ -23,18 +23,18 @@ st.sidebar.write("You selected:", TimeSetting)
 # End Sidebar Settings
 
 
-def create_event(eventDiscription, start, end ):
+def create_event(CalendarID, eventDiscription, start, end ):
     # date = datetime.now().date()
     # today = datetime(date.year, date.month, date.day, 10) + timedelta(days=0)
     # start = today.isoformat()
     # end = (today + timedelta(hours=1)).isoformat()
     service = get_calendar_service()
-    event_result = service.events().insert(calendarId='primary',
+    event_result = service.events().insert(calendarId=CalendarID,
                                            body={
                                                "summary": 'Automated Event '+ eventDiscription,
                                                "description": eventDiscription,
-                                               "start": {"dateTime": start, "timeZone": 'Asia/Kolkata'},
-                                               "end": {"dateTime": end, "timeZone": 'Asia/Kolkata'},
+                                               "start": {"dateTime": start, "timeZone": 'America/New_York'},
+                                               "end": {"dateTime": end, "timeZone": 'America/New_York'},
                                            }
                                            ).execute()
 
@@ -55,9 +55,25 @@ with maker:
     if os.path.exists('token.pickle'):
         st.write("You're logged in as []")
         loggedIn = True
+
+        calendar_list = get_calendar_service().calendarList().list().execute()
+        calendarID = ""
+        for calendar_list_entry in calendar_list['items']:
+            if calendar_list_entry['summary'] == 'Adhd':
+                calendarID = calendar_list_entry['id']
+                break
+        if calendarID == "":
+            calendarTemplate = {
+                'summary': 'Adhd',
+                'timeZone': 'America/New_York'
+            }
+            created_calendar = get_calendar_service().calendars().insert(body=calendarTemplate).execute()
+            calendarID = created_calendar['id']
+
     else:
         st.write("You're not logged in")
         loggedIn = False
+
 
     if loggedIn == True:
         with st.form(key='my_form'):
@@ -68,18 +84,15 @@ with maker:
             placeholder="Select an option",
             )
             
-                
-            
-            
             date, time= st.columns(2)
             submit_button = st.form_submit_button(label='Submit')
 
             with date:
-                startDate = st.date_input("Select Date", key=10)
-                endDate = st.date_input("Select endDate")
+                startDate = st.date_input("Select Date", key="startDate", value=datetime.now())
+                endDate = st.date_input("Select endDate", key="endDate", value=datetime.now()+timedelta(days=1) )
             with time:
-                startTime = st.time_input("Select Time", key=11)
-                endTime = st.time_input("Select endTime")
+                startTime = st.time_input("Select Time", key="startTime", value=datetime.now().time(), step=timedelta(minutes=1))
+                endTime = st.time_input("Select endTime" , key="endTime", value=(datetime.now()+timedelta(hours=1)).time(), step=timedelta(minutes=1))
             startDate = datetime.combine(startDate, startTime)
             start = startDate.isoformat()
             endDate = datetime.combine(endDate, endTime)
@@ -87,7 +100,7 @@ with maker:
 
             if submit_button:
                 print(description, start, end)
-                create_event(description, start, end)    
+                create_event(calendarID,description, start, end)    
                 st.write("Event Created")
 
 # Custom CSS For Calendar
