@@ -43,6 +43,8 @@ def create_event(eventDiscription, start, end ):
     st.write("Starts At: ", event_result['start']['dateTime'])
     st.write("Ends At: ", event_result['end']['dateTime'])
 
+options = ["Eating", "Vyvance", "Study", "Sleep", "Work", "Exercise", "Meditation", "Reading", "Coding", "Meeting", "Break", "Other"]
+
 with maker:
     st.title("Streamlit Oauth Login")
     loggedIn = False
@@ -58,7 +60,16 @@ with maker:
 
     if loggedIn == True:
         with st.form(key='my_form'):
-            description = st.text_input("Describe the event: ")
+            description = st.selectbox(
+            "Describe the event",
+            options,
+            index=None,
+            placeholder="Select an option",
+            )
+            
+                
+            
+            
             date, time= st.columns(2)
             submit_button = st.form_submit_button(label='Submit')
 
