@@ -184,7 +184,7 @@ def list_event(CalendarID):
     # print('Calendar ID: ', CalendarID, events_result['items'])
     for event in events:
         # start = event['start'].get('dateTime', event['start'].get('date'))
-        # print(start, event)
+        print( event)
         calenderItem = {
           "title": str(event['summary']),
         "color": event['colorId'] if 'colorId' in event else "#fca903",
@@ -282,8 +282,8 @@ def create_event(CalendarID, eventDiscription, start, end ):
 options = ["Eating", "Vyvance", "Study", "Sleep", "Work", "Exercise", "Meditation", "Reading", "Coding", "Meeting", "Break", "Other"]
 
 Presets = {
-    "Eating": [datetime.now(), datetime.now(), time(1,20), time(1,30)], 
-    "Vyvance": [datetime.now(), datetime.now(),time(1,30), timedelta(hours=12)],
+    "Eating": [datetime.now(), datetime.now(), datetime(2024, 6, 21, 3,4), time(1,30)], 
+    "Vyvance": [datetime.now(), datetime.now(),datetime(2024, 6, 21, 3,4), timedelta(hours=12)],
     "Study": [datetime.now(), datetime.now(),time(1,20), time(1,30)],
     "Sleep": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
     "Work": [datetime.now(), datetime.now(),time(1,20),time(1,30)],

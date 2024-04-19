@@ -252,7 +252,7 @@ with maker:
             startDate = st.date_input("Select Date", key="startDate", value=timeInput[0])
             endDate = st.date_input("Select endDate", key="endDate", value=timeInput[1] )
         with time:
-            startTime = st.time_input("Select Time", key="startTime", value= timeInput[2], step=timedelta(minutes=5))
+            startTime = st.time_input("Select Time", key="startTime", value= timeInput[2].time(), step=timedelta(minutes=5))
             if st.session_state.description == "Vyvance":
                 endTime = st.time_input("Select endTime" , key="endTime", value= (timeInput[2] + timeInput[3]).time(), step=timedelta(minutes=5), disabled=True)
             else:
