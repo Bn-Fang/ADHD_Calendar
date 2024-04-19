@@ -21,9 +21,6 @@ async def get_authorization_url(client: GoogleOAuth2, redirect_uri: str):
 
 async def get_access_token(client: GoogleOAuth2, redirect_uri: str, code: str):
     token = await client.get_access_token(code, redirect_uri)
-    # tokenString = str(token).replace("'", "\"")
-    # with open("token.json", "w") as tokenFile:
-    #   tokenFile.write(tokenString)
     return token
 
 

@@ -1,107 +1,113 @@
 import streamlit as st
 from streamlit_calendar import calendar
-from auth import *
-from Cal import get_calendar_service
-from datetime import datetime, timedelta
+from Cal import *
+from datetime import datetime, timedelta, time
 import base64
 import plotly.express as px
+
+st.sidebar.title("Google Authentication")
+login()
+
+# Custom Format Function For Select Box
+def format_option(option):
+    if option == "dayGridMonth":
+        return "🈷️ Month"
+    elif option == "timeGridWeek":
+        return "🗓️ Week"
+    elif option == "timeGridDay":
+        return "📅 Day"
+    elif option == "listMonth":
+        return "📈 List"
+TimeSetting = "1 Minute"    
+st.session_state.calendar_options = {
+    "editable": "true",
+    "navLinks": "true",
+    "selectable": "true",
+}
+if TimeSetting == "1 Minute":
+    st.session_state.calendar_options = {
+        **st.session_state.calendar_options,
+        "initialView": "timeGridWeek",
+        "slotDuration": "00:01",
+        "slotLabelInterval": "00:01:00",
+    }
+elif TimeSetting == "5 Minutes":
+    st.session_state.calendar_options = {
+        **st.session_state.calendar_options,
+        "initialView": "timeGridWeek",
+        "slotDuration": "00:05",
+        "slotLabelInterval": "00:01:00",
+    }
+elif TimeSetting == "15 Minutes":
+    st.session_state.calendar_options = {
+        **st.session_state.calendar_options,
+        "initialView": "timeGridWeek",
+        "slotDuration": "00:15",
+        "slotLabelInterval": "00:01:00",
+    }
+elif TimeSetting == "30 Minutes":
+    st.session_state.calendar_options = {
+        **st.session_state.calendar_options,
+        "initialView": "timeGridWeek",
+        "slotDuration": "00:30",
+        "slotLabelInterval": "00:01:00",
+    }
+elif TimeSetting == "1 Hour":
+    st.session_state.calendar_options = {
+        **st.session_state.calendar_options,
+        "initialView": "timeGridWeek",
+        "slotDuration": "01:00",
+        "slotLabelInterval": "00:01:00",
+    }
+else:
+    st.session_state.calendar_options = {
+        **st.session_state.calendar_options,
+        "initialView": "timeGridWeek",
+        "slotDuration": "01:00",
+        "slotLabelInterval": "00:01:00",
+    }
+
+
 
 # making seperate tabs
 viewer, maker = st.tabs(["View Calendar", "Make Events"])
 
-
-# Start Sidebar Settings
-st.sidebar.title("Settings")
-st.sidebar.write("---")
-
-TimeSetting = st.sidebar.radio(
-    "How do you want to subdivide your time?",
-    ["1 Minute", "5 Minutes", "15 Minutes", "30 Minutes", "1 Hour"],
-    index=None,
-)
-st.sidebar.write("You selected:", TimeSetting)
-# End Sidebar Settings
-
-
-def create_event(CalendarID, eventDiscription, start, end ):
-    # date = datetime.now().date()
-    # today = datetime(date.year, date.month, date.day, 10) + timedelta(days=0)
-    # start = today.isoformat()
-    # end = (today + timedelta(hours=1)).isoformat()
-    service = get_calendar_service()
-    event_result = service.events().insert(calendarId=CalendarID,
-                                           body={
-                                               "summary": 'Automated Event '+ eventDiscription,
-                                               "description": eventDiscription,
-                                               "start": {"dateTime": start, "timeZone": 'America/New_York'},
-                                               "end": {"dateTime": end, "timeZone": 'America/New_York'},
-                                           }
-                                           ).execute()
-
-    st.write("Calendar Automation has created an event")
-    st.write("Id: ", event_result['id'])
-    st.write("Summary: ", event_result['summary'])
-    st.write("Starts At: ", event_result['start']['dateTime'])
-    st.write("Ends At: ", event_result['end']['dateTime'])
-
-options = ["Eating", "Vyvance", "Study", "Sleep", "Work", "Exercise", "Meditation", "Reading", "Coding", "Meeting", "Break", "Other"]
-
 with maker:
-    st.title("Streamlit Oauth Login")
-    loggedIn = False
-    if st.button("Login with Google"):
-        get_calendar_service()
+    if st.session_state.loggedIn == True:
+        st.session_state.description = st.selectbox(
+        "Describe the event",
+        options,
+        index=0,
+        placeholder="Eating",
+        )
+        print (st.session_state.description, Presets[st.session_state.description])
+        date, time= st.columns(2)
+        submit_button = st.button(label='Submit')
+        customSettings = st.empty()
+        
+        
+        
+        
+        
+        with date:
+            startDate = st.date_input("Select Date", key="startDate", value=Presets[st.session_state.description][0])
+            endDate = st.date_input("Select endDate", key="endDate", value=Presets[st.session_state.description][1] )
+        with time:
+            startTime = st.time_input("Select Time", key="startTime", value=Presets[st.session_state.description][2], step=timedelta(minutes=5))
+            endTime = st.time_input("Select endTime" , key="endTime", value= Presets[st.session_state.description][3], step=timedelta(minutes=5))
+        startDate = datetime.combine(startDate, startTime)
+        start = startDate.isoformat()
+        endDate = datetime.combine(endDate, endTime)
+        end = endDate.isoformat()
 
-    if os.path.exists('token.pickle'):
-        st.write("You're logged in as []")
-        loggedIn = True
-
-        calendar_list = get_calendar_service().calendarList().list().execute()
-        calendarID = ""
-        for calendar_list_entry in calendar_list['items']:
-            if calendar_list_entry['summary'] == 'Adhd':
-                calendarID = calendar_list_entry['id']
-                break
-        if calendarID == "":
-            calendarTemplate = {
-                'summary': 'Adhd',
-                'timeZone': 'America/New_York'
-            }
-            created_calendar = get_calendar_service().calendars().insert(body=calendarTemplate).execute()
-            calendarID = created_calendar['id']
-
+        if submit_button:
+            print(st.session_state.description, start, end)
+            create_event(st.session_state.calendarID,st.session_state.description, start, end)    
+            st.write("Event Created")
     else:
-        st.write("You're not logged in")
-        loggedIn = False
-
-
-    if loggedIn == True:
-        with st.form(key='my_form'):
-            description = st.selectbox(
-            "Describe the event",
-            options,
-            index=None,
-            placeholder="Select an option",
-            )
-            
-            date, time= st.columns(2)
-            submit_button = st.form_submit_button(label='Submit')
-
-            with date:
-                startDate = st.date_input("Select Date", key="startDate", value=datetime.now())
-                endDate = st.date_input("Select endDate", key="endDate", value=datetime.now()+timedelta(days=1) )
-            with time:
-                startTime = st.time_input("Select Time", key="startTime", value=datetime.now().time(), step=timedelta(minutes=1))
-                endTime = st.time_input("Select endTime" , key="endTime", value=(datetime.now()+timedelta(hours=1)).time(), step=timedelta(minutes=1))
-            startDate = datetime.combine(startDate, startTime)
-            start = startDate.isoformat()
-            endDate = datetime.combine(endDate, endTime)
-            end = endDate.isoformat()
-
-            if submit_button:
-                print(description, start, end)
-                create_event(calendarID,description, start, end)    
-                st.write("Event Created")
+        st.write("Please login to create events")
+        if st.button("Login with Google"):
+            get_calendar_service()
 
 # Custom CSS For Calendar
 calendar_css = """
@@ -263,77 +269,24 @@ calendar_css = """
 """
 
 with viewer:
-    st.title("Calendar Viewer")
-    calendar_options = {
-        "editable": "true",
-        "navLinks": "true",
-        "selectable": "true",
-    }
-    if TimeSetting == "1 Minute":
-        calendar_options = {
-            **calendar_options,
-            "initialView": "timeGridWeek",
-            "slotDuration": "00:01",
-            "slotLabelInterval": "00:01:00",
-        }
-    elif TimeSetting == "5 Minutes":
-        calendar_options = {
-            **calendar_options,
-            "initialView": "timeGridWeek",
-            "slotDuration": "00:05",
-            "slotLabelInterval": "00:01:00",
-        }
-    elif TimeSetting == "15 Minutes":
-        calendar_options = {
-            **calendar_options,
-            "initialView": "timeGridWeek",
-            "slotDuration": "00:15",
-            "slotLabelInterval": "00:01:00",
-        }
-    elif TimeSetting == "30 Minutes":
-        calendar_options = {
-            **calendar_options,
-            "initialView": "timeGridWeek",
-            "slotDuration": "00:30",
-            "slotLabelInterval": "00:01:00",
-        }
-    elif TimeSetting == "1 Hour":
-        calendar_options = {
-            **calendar_options,
-            "initialView": "timeGridWeek",
-            "slotDuration": "01:00",
-            "slotLabelInterval": "00:01:00",
-        }
-    else:
-        calendar_options = {
-            **calendar_options,
-            "initialView": "timeGridWeek",
-            "slotDuration": "01:00",
-            "slotLabelInterval": "00:01:00",
-        }
-    # Custom Format Function For Select Box
-    def format_option(option):
-        if option == "dayGridMonth":
-            return "🈷️ Month"
-        elif option == "timeGridWeek":
-            return "🗓️ Week"
-        elif option == "timeGridDay":
-            return "📅 Day"
-        elif option == "listMonth":
-            return "📈 List"
-    # Adding Different Calendar Views
-    selected_view = st.selectbox(
+    if st.session_state.loggedIn == True:
+        selected_view = st.selectbox(
         "Select Calendar View:",
         ["dayGridMonth", "timeGridWeek", "timeGridDay", "listMonth"],
         format_func=format_option,
         index=1,
-    )
-    calendar_options["initialView"] = selected_view
-    # Add Custom Options
-    state = calendar(
-        options=calendar_options,
+        )
+        st.session_state.calendar_options["initialView"] = selected_view
+        state = calendar(
+        events=st.session_state.events,
+        options=st.session_state.calendar_options,
         custom_css=calendar_css,
-    )
+        )
+    
+    # Adding Different Calendar Views
+    
+    # Add Custom Options
+
 
 
 df = px.data.iris()
