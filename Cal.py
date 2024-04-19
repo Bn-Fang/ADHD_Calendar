@@ -283,7 +283,7 @@ options = ["Eating", "Vyvance", "Study", "Sleep", "Work", "Exercise", "Meditatio
 
 Presets = {
     "Eating": [datetime.now(), datetime.now(), time(1,20), time(1,30)], 
-    "Vyvance": [datetime.now(), datetime.now(),time(1,30), time(8,30)],
+    "Vyvance": [datetime.now(), datetime.now(),time(1,30), timedelta(hours=12)],
     "Study": [datetime.now(), datetime.now(),time(1,20), time(1,30)],
     "Sleep": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
     "Work": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
@@ -293,7 +293,7 @@ Presets = {
     "Coding": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
     "Meeting": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
     "Break": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Other": [datetime.now(), datetime.now(), datetime.now().time(), (datetime.now()+timedelta(hours=1)).time()],
+    "Other": [datetime.now(), datetime.now(), datetime.now(), (datetime.now()+timedelta(hours=1))],
 }
 
 def login():

@@ -67,50 +67,7 @@ else:
         "slotLabelInterval": "00:01:00",
     }
 
-
-
-# making seperate tabs
-viewer, maker = st.tabs(["View Calendar", "Make Events"])
-
-with maker:
-    if st.session_state.loggedIn == True:
-        st.session_state.description = st.selectbox(
-        "Describe the event",
-        options,
-        index=0,
-        placeholder="Eating",
-        )
-        print (st.session_state.description, Presets[st.session_state.description])
-        date, time= st.columns(2)
-        submit_button = st.button(label='Submit')
-        customSettings = st.empty()
-        
-        
-        
-        
-        
-        with date:
-            startDate = st.date_input("Select Date", key="startDate", value=Presets[st.session_state.description][0])
-            endDate = st.date_input("Select endDate", key="endDate", value=Presets[st.session_state.description][1] )
-        with time:
-            startTime = st.time_input("Select Time", key="startTime", value=Presets[st.session_state.description][2], step=timedelta(minutes=5))
-            endTime = st.time_input("Select endTime" , key="endTime", value= Presets[st.session_state.description][3], step=timedelta(minutes=5))
-        startDate = datetime.combine(startDate, startTime)
-        start = startDate.isoformat()
-        endDate = datetime.combine(endDate, endTime)
-        end = endDate.isoformat()
-
-        if submit_button:
-            print(st.session_state.description, start, end)
-            create_event(st.session_state.calendarID,st.session_state.description, start, end)    
-            st.write("Event Created")
-    else:
-        st.write("Please login to create events")
-        if st.button("Login with Google"):
-            get_calendar_service()
-
-# Custom CSS For Calendar
-calendar_css = """
+st.session_state.calendar_css = """
 /* Custom Styles For Buttons */
 .fc-today-button {
     width: 85px;
@@ -268,6 +225,56 @@ calendar_css = """
 }
 """
 
+# making seperate tabs
+viewer, maker = st.tabs(["View Calendar", "Make Events"])
+
+with maker:
+    if st.session_state.loggedIn == True:
+        st.session_state.description = st.selectbox(
+        "Describe the event",
+        options,
+        index=0,
+        placeholder="Eating",
+        )
+        print (st.session_state.description, Presets[st.session_state.description])
+        date, time= st.columns(2)
+        submit_button = st.button(label='Submit')
+        
+        timeInput = [Presets[st.session_state.description][0], Presets[st.session_state.description][1],Presets[st.session_state.description][2], Presets[st.session_state.description][3]]
+        
+        if st.session_state.description == "Sleep":
+            timeInput = [Presets[st.session_state.description][0], Presets[st.session_state.description][1],Presets[st.session_state.description][2], Presets[st.session_state.description][3]]
+        
+        
+        
+        
+        with date:
+            startDate = st.date_input("Select Date", key="startDate", value=timeInput[0])
+            endDate = st.date_input("Select endDate", key="endDate", value=timeInput[1] )
+        with time:
+            startTime = st.time_input("Select Time", key="startTime", value= timeInput[2], step=timedelta(minutes=5))
+            if st.session_state.description == "Vyvance":
+                endTime = st.time_input("Select endTime" , key="endTime", value= (timeInput[2] + timeInput[3]).time(), step=timedelta(minutes=5), disabled=True)
+            else:
+                endTime = st.time_input("Select endTime" , key="endTime", value= (timeInput[3]), step=timedelta(minutes=5))
+        startDate = datetime.combine(startDate, startTime)
+        start = startDate.isoformat()
+        endDate = datetime.combine(endDate, endTime)
+        end = endDate.isoformat()
+
+        if submit_button:
+            print(st.session_state.description, start, end)
+            create_event(st.session_state.calendarID,st.session_state.description, start, end)    
+            st.write("Event Created")
+            
+    else:
+        st.write("Please login to create events")
+        if st.button("Login with Google"):
+            get_calendar_service()
+
+# Custom CSS For Calendar
+
+
 with viewer:
     if st.session_state.loggedIn == True:
         selected_view = st.selectbox(
@@ -280,7 +287,7 @@ with viewer:
         state = calendar(
         events=st.session_state.events,
         options=st.session_state.calendar_options,
-        custom_css=calendar_css,
+        custom_css=st.session_state.calendar_css
         )
     
     # Adding Different Calendar Views
