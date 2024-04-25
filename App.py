@@ -195,10 +195,6 @@ st.session_state.calendar_css = """
 .fc {
     /* Main Styles */
     color: #262730;
-    border-top-left-radius: 10px; /* 10px radius on the top left corner */
-    border-top-right-radius: 10px; /* 10px radius on the top right corner */
-    border-bottom-left-radius: 0; /* No radius on the bottom left corner */
-    border-bottom-right-radius: 0; /* No radius on the bottom right corner */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: rgb(255, 255, 225);
 
@@ -220,10 +216,6 @@ st.session_state.calendar_css = """
 
 
     /* Toolbar Styles */
-    .fc-header-toolbar {
-        border-radius: 10px;
-        background-color: rgb(255, 255, 225) !important;
-    }
 
     .fc-toolbar.fc-header-toolbar {
         margin-bottom: 0em !important;
@@ -237,8 +229,6 @@ st.session_state.calendar_css = """
 
     .fc-header-toolbar {
         padding: 10px;
-        background-color: #f0f0f0;
-        border-radius: 10px;
     }
 
     .fc-toolbar-title {
