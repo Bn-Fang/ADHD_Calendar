@@ -7,7 +7,6 @@ import plotly.express as px
 
 
 st.sidebar.title("Settings")
-background_color = "rgb(255, 255, 190)"
 
 # If I don't do this, there will be an error message.
 if 'background_image' not in st.session_state:
@@ -29,7 +28,7 @@ def load_background_image(uploaded_file=None):
 # Sidebar for menu selection
 menu_option = st.sidebar.selectbox(
     "Menu Options",
-    ["Google Authorization", "Upload Background Image", "Edit Calendar Color"],
+    ["Google Authorization", "Upload Background Image"],
     index=0
 )
 
@@ -41,8 +40,6 @@ elif menu_option == "Upload Background Image":
     uploaded_file = st.sidebar.file_uploader("", type=['png', 'jpg', 'jpeg'])
     background_image = load_background_image(uploaded_file)
     st.session_state.background_image = background_image
-elif menu_option == "Edit Calendar Color":
-    background_color = st.sidebar.color_picker('Pick a color', '#FFF')
 
 # Use session_state to handle the background image
 page_css = f"""
@@ -61,10 +58,6 @@ page_css = f"""
 
         [data-testid="stToolbar"] {{
             right: 2rem;
-        }}
-
-        [data-testid="stApp"] {{
-            background-color: {background_color};
         }}
     </style>
 """
