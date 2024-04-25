@@ -5,8 +5,46 @@ from datetime import datetime, timedelta, time
 import base64
 import plotly.express as px
 
-st.sidebar.title("Google Authentication")
+st.sidebar.title("Settings")
+# st.sidebar.markdown("### Google Authentication")
 login()
+
+# st.sidebar.markdown("### User Interface")
+# Add a file uploader to customize the background image
+uploaded_file = st.sidebar.file_uploader("Upload Background Image", type=['png', 'jpg', 'jpeg'])
+if uploaded_file is not None:
+    # Convert the uploaded image file to base64 for use in CSS
+    img = base64.b64encode(uploaded_file.getvalue()).decode('utf-8')
+    st.session_state.background_image = f"data:image/png;base64,{img}"
+else:
+    # Provide a default image if no file has been uploaded
+    default_image = "img.jpg"  # Adjust the default image path or handling as needed
+    with open(default_image, "rb") as f:
+        default_img = base64.b64encode(f.read()).decode('utf-8')
+    st.session_state.background_image = f"data:image/png;base64,{default_img}"
+
+# Use session_state to handle the background image
+page_css = f"""
+    <style>
+        [data-testid="stAppViewContainer"] > .main {{
+            background-image: url("{st.session_state.background_image}");
+            background-size: 90%;
+            background-position: bottom;
+            background-repeat: no-repeat;
+            background-attachment: local;
+        }}
+
+        [data-testid="stHeader"] {{
+            background: rgba(0,0,0,0);
+        }}
+
+        [data-testid="stToolbar"] {{
+            right: 2rem;
+        }}
+    </style>
+"""
+
+st.markdown(page_css, unsafe_allow_html=True)
 
 # Custom Format Function For Select Box
 def format_option(option):
@@ -293,40 +331,3 @@ with viewer:
     # Adding Different Calendar Views
     
     # Add Custom Options
-
-
-
-df = px.data.iris()
-
-@st.cache_data
-def get_img_as_base64(file):
-    with open(file, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-
-img = get_img_as_base64("img.jpg")
-
-# Custom CSS For Page
-page_css = f"""
-    <style>
-        [data-testid="stAppViewContainer"] > .main {{
-            background-image: url("data:image/png;base64,{img}");
-            background-size: 90%;
-            background-position: bottom;
-            background-repeat: no-repeat;
-            background-attachment: local;
-        }}
-
-        [data-testid="stHeader"] {{
-            background: rgba(0,0,0,0);
-        }}
-
-        [data-testid="stToolbar"] {{
-            right: 2rem;
-        }}
-    </style>
-"""
-
-# Render Custom CSS
-st.markdown(page_css, unsafe_allow_html=True)
