@@ -5,23 +5,41 @@ from datetime import datetime, timedelta, time
 import base64
 import plotly.express as px
 
-st.sidebar.title("Settings")
-# st.sidebar.markdown("### Google Authentication")
-login()
 
-# st.sidebar.markdown("### User Interface")
-# Add a file uploader to customize the background image
-uploaded_file = st.sidebar.file_uploader("Upload Background Image", type=['png', 'jpg', 'jpeg'])
-if uploaded_file is not None:
-    # Convert the uploaded image file to base64 for use in CSS
-    img = base64.b64encode(uploaded_file.getvalue()).decode('utf-8')
-    st.session_state.background_image = f"data:image/png;base64,{img}"
-else:
-    # Provide a default image if no file has been uploaded
-    default_image = "img.jpg"  # Adjust the default image path or handling as needed
-    with open(default_image, "rb") as f:
-        default_img = base64.b64encode(f.read()).decode('utf-8')
-    st.session_state.background_image = f"data:image/png;base64,{default_img}"
+st.sidebar.title("Settings")
+
+# If I don't do this, there will be an error message.
+if 'background_image' not in st.session_state:
+    with open("img.jpg", "rb") as f:
+        image = base64.b64encode(f.read()).decode('utf-8')
+    st.session_state.background_image = f"data:image/png;base64,{image}"
+
+# Load default or uploaded background image
+def load_background_image(uploaded_file=None):
+    default_image = "img.jpg"
+    if uploaded_file is not None:
+        img = base64.b64encode(uploaded_file.getvalue()).decode('utf-8')
+        return f"data:image/png;base64,{img}"
+    else:
+        with open(default_image, "rb") as f:
+            default_img = base64.b64encode(f.read()).decode('utf-8')
+        return f"data:image/png;base64,{default_img}"
+
+# Sidebar for menu selection
+menu_option = st.sidebar.selectbox(
+    "Menu Options",
+    ["Google Authorization", "Upload Background Image"],
+    index=0
+)
+
+if menu_option == "Google Authorization":
+    # Display Google Authorization
+    login()  # Function that handles Google login
+elif menu_option == "Upload Background Image":
+    # Upload and display background image
+    uploaded_file = st.sidebar.file_uploader("", type=['png', 'jpg', 'jpeg'])
+    background_image = load_background_image(uploaded_file)
+    st.session_state.background_image = background_image
 
 # Use session_state to handle the background image
 page_css = f"""
