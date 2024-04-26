@@ -272,13 +272,13 @@ def create_event(CalendarID, eventDiscription, start, end, all_day=False, course
         if isinstance(end, str):
             end = datetime.fromisoformat(end.split('T')[0])  # Same as above
 
-        full_description = eventDiscription
-        if url:
-            full_description += f"\nMore Info: {url}"
+        # full_description = eventDiscription
+        # if url:
+        #     full_description += f" <a href='{url}'>More Info</a>"
         event_result = service.events().insert(calendarId=CalendarID,
                                             body={
-                                                "summary": course_name + ' ' + eventDiscription + f'\n{full_description}',
-                                                "description": full_description,
+                                                "summary": course_name + ' ' + eventDiscription,
+                                                "description": eventDiscription,
                                                 "start": {"date": start.strftime("%Y-%m-%d")},
                                                 "end": {"date": (end + timedelta(days=1)).strftime("%Y-%m-%d")},
                                             }

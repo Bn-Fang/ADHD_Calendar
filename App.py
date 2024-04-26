@@ -273,7 +273,7 @@ st.session_state.calendar_css = """
 """
 
 # making seperate tabs
-viewer, maker = st.tabs(["View Calendar", "Make Events"])
+viewer, maker, canvas_maker = st.tabs(["View Calendar", "Make Events", "Import Canvas Schedule"])
 
 with maker:
     if st.session_state.loggedIn == True:
@@ -310,11 +310,16 @@ with maker:
             print(st.session_state.description, start, end)
             create_event(st.session_state.calendarID,st.session_state.description, start, end)    
             st.write("Event Created")
+    else:
+        st.write("Please login to create events")
+        if st.button("Login with Google"):
+            get_calendar_service()
 
+with canvas_maker:
+    if st.session_state.loggedIn == True:
         canvas_button = st.button(label='Sync with Canvas')
         if canvas_button:
             canvas(st.session_state.calendarID)
-            
     else:
         st.write("Please login to create events")
         if st.button("Login with Google"):
