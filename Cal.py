@@ -201,19 +201,19 @@ def update_event():
         calendarId=al,
         eventId=eid,
         body={
-        "summary": 'AAKASH --- CALENDAR AUTOMATION',
+        "summary": 'CALENDAR AUTOMATION',
         "description": a,
-        "start": {"dateTime": start, "timeZone": 'Asia/Kolkata'},
-        "end": {"dateTime": end, "timeZone": 'Asia/Kolkata'},
+        "start": {"dateTime": start, "timeZone": 'America/New_York'},
+        "end": {"dateTime": end, "timeZone": 'America/New_York'},
         },
          ).execute()
 
 
-    print("Updated Event: ", eid)
-    print("Id: ", event_result['id'])
-    print("Summary: ", event_result['summary'])
-    print("Starts At: ", event_result['start']['dateTime'])
-    print("Ends At: ", event_result['end']['dateTime'])
+    # print("Updated Event: ", eid)
+    # print("Id: ", event_result['id'])
+    # print("Summary: ", event_result['summary'])
+    # print("Starts At: ", event_result['start']['dateTime'])
+    # print("Ends At: ", event_result['end']['dateTime'])
 
 def delete_event():
 
