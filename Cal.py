@@ -166,7 +166,8 @@ def list_event(CalendarID):
         "start": event['start']['dateTime'] if 'dateTime' in event['start'] else event['start']['date'],
         "end": event['end']['dateTime'] if 'dateTime' in event['end'] != None else event['end']['date'],
         "resourceId": str(event['summary']).split(" | ")[1] if len(str(event['summary']).split(" | ")) > 1 else "a",
-        "allDay": False if 'dateTime' in event['start'] else True
+        "allDay": False if 'dateTime' in event['start'] else True,
+        "TimeConflict": "conflictAllowed" if 'conflictAllowed' in event['description'] else "notAllowed",
         }
         
         eventsOut.append(calenderItem)
@@ -278,7 +279,13 @@ def create_event(CalendarID, eventDiscription, start, end, allDay, conflictAllow
 
 def login():
     if os.path.exists('token.pickle'):
-        st.sidebar.write("You're logged in as", get_name())
+        try:
+            st.sidebar.write("You're logged in as", get_name())
+        except:
+            st.sidebar.write("You Timed out please login again")
+            os.remove('token.pickle')
+            st.session_state.loggedIn = False
+            st.rerun()    
         
         st.session_state.loggedIn = True
         st.session_state.calendarID = get_calendar_ID("Adhd")

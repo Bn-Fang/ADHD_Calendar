@@ -28,8 +28,8 @@ def load_background_image(uploaded_file=None):
 
 # Sidebar for menu selection
 menu_option = st.sidebar.selectbox(
-    "Menu Options",
-    ["Google Authorization", "Upload Background Image"],
+    label="Menu Options",
+    options=["Google Authorization", "Upload Background Image"],
     index=0
 )
 
@@ -75,41 +75,43 @@ def format_option(option):
         return "📅 Day"
     elif option == "listMonth":
         return "📈 List"
-TimeSetting = "1 Minute"    
+    
+    
+st.session_state.TimeSetting = "5 Minute"    
 st.session_state.calendar_options = {
     "editable": "true",
     "navLinks": "true",
     "selectable": "true",
 }
-if TimeSetting == "1 Minute":
+if st.session_state.TimeSetting == "1 Minute":
     st.session_state.calendar_options = {
         **st.session_state.calendar_options,
         "initialView": "timeGridWeek",
         "slotDuration": "00:01",
         "slotLabelInterval": "00:01:00",
     }
-elif TimeSetting == "5 Minutes":
+elif st.session_state.TimeSetting == "5 Minutes":
     st.session_state.calendar_options = {
         **st.session_state.calendar_options,
         "initialView": "timeGridWeek",
         "slotDuration": "00:05",
         "slotLabelInterval": "00:01:00",
     }
-elif TimeSetting == "15 Minutes":
+elif st.session_state.TimeSetting == "15 Minutes":
     st.session_state.calendar_options = {
         **st.session_state.calendar_options,
         "initialView": "timeGridWeek",
         "slotDuration": "00:15",
         "slotLabelInterval": "00:01:00",
     }
-elif TimeSetting == "30 Minutes":
+elif st.session_state.TimeSetting == "30 Minutes":
     st.session_state.calendar_options = {
         **st.session_state.calendar_options,
         "initialView": "timeGridWeek",
         "slotDuration": "00:30",
         "slotLabelInterval": "00:01:00",
     }
-elif TimeSetting == "1 Hour":
+elif st.session_state.TimeSetting == "1 Hour":
     st.session_state.calendar_options = {
         **st.session_state.calendar_options,
         "initialView": "timeGridWeek",
@@ -287,10 +289,13 @@ with viewer:
         )
         st.session_state.calendar_options["initialView"] = selected_view
         state = calendar(
+        
         events=st.session_state.events,
         options=st.session_state.calendar_options,
-        custom_css=st.session_state.calendar_css
+        custom_css=st.session_state.calendar_css,
+        callbacks=["eventChange"],
         )
+        print(state)
         
     
 
