@@ -19,6 +19,7 @@ from datetime import datetime, timedelta, time
 import streamlit as st
 
 
+
 # You can change the scope of the application, make sure to delete token.pickle file first
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
@@ -138,32 +139,6 @@ def list_cal():
         primary = "Primary" if calendar.get('primary') else ""
         print("%s\t%s\t%s" % (summary, id, primary))
 
-# def create_event():
-
-#     print("Create an event")
-#     a = input("Describe the event: ")
-#     service = get_calendar_service()
-
-#     date = datetime.now().date()
-#     today = datetime(date.year, date.month, date.day, 10) + timedelta(days=0)
-#     start = today.isoformat()
-#     end = (today + timedelta(hours=1)).isoformat()
-
-#     event_result = service.events().insert(calendarId='primary',
-#                                            body={
-#                                                "summary": 'CALENDAR AUTOMATION',
-#                                                "description": a,
-#                                                "start": {"dateTime": start, "timeZone": 'Asia/Kolkata'},
-#                                                "end": {"dateTime": end, "timeZone": 'Asia/Kolkata'},
-#                                            }
-#                                            ).execute()
-
-#     print("Calendar Automation has created an event")
-#     print("Id: ", event_result['id'])
-#     print("Summary: ", event_result['summary'])
-#     print("Starts At: ", event_result['start']['dateTime'])
-#     print("Ends At: ", event_result['end']['dateTime'])
-
 
 def list_event(CalendarID):
     import datetime
@@ -194,10 +169,6 @@ def list_event(CalendarID):
         }
         eventsOut.append(calenderItem)
     return eventsOut
-        
-        
-        
-        
         
 
 # {
@@ -302,22 +273,6 @@ def create_event(CalendarID, eventDiscription, start, end, all_day=False, course
     # st.write("Starts At: ", event_result['start'][start_key])
     # st.write("Ends At: ", event_result['end'][end_key])
 
-options = ["Eating", "Vyvance", "Study", "Sleep", "Work", "Exercise", "Meditation", "Reading", "Coding", "Meeting", "Break", "Other"]
-
-Presets = {
-    "Eating": [datetime.now(), datetime.now(), datetime(2024, 6, 21, 3,4), time(1,30)], 
-    "Vyvance": [datetime.now(), datetime.now(),datetime(2024, 6, 21, 3,4), timedelta(hours=12)],
-    "Study": [datetime.now(), datetime.now(),time(1,20), time(1,30)],
-    "Sleep": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Work": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Exercise": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Meditation": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Reading": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Coding": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Meeting": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Break": [datetime.now(), datetime.now(),time(1,20),time(1,30)],
-    "Other": [datetime.now(), datetime.now(), datetime.now(), (datetime.now()+timedelta(hours=1))],
-}
 
 def login():
     if os.path.exists('token.pickle'):
