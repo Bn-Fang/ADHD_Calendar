@@ -258,26 +258,49 @@ def delete_event():
     print("Event deleted")
 
 
-def create_event(CalendarID, eventDiscription, start, end ):
+def create_event(CalendarID, eventDiscription, start, end, all_day=False, course_name=None, url=None):
     # date = datetime.now().date()
     # today = datetime(date.year, date.month, date.day, 10) + timedelta(days=0)
     # start = today.isoformat()
     # end = (today + timedelta(hours=1)).isoformat()
     service = get_calendar_service()
-    event_result = service.events().insert(calendarId=CalendarID,
-                                           body={
-                                               "summary": 'Automated Event '+ eventDiscription,
-                                               "description": eventDiscription,
-                                               "start": {"dateTime": start, "timeZone": 'America/New_York'},
-                                               "end": {"dateTime": end, "timeZone": 'America/New_York'},
-                                           }
-                                           ).execute()
+    if all_day:
+        # Parse start and end dates if they are strings
+        if isinstance(start, str):
+            # This assumes the string is in a full datetime format with potential timezone information
+            start = datetime.fromisoformat(start.split('T')[0])  # Splits at 'T' and takes the date part
+        if isinstance(end, str):
+            end = datetime.fromisoformat(end.split('T')[0])  # Same as above
 
-    st.write("Calendar Automation has created an event")
-    st.write("Id: ", event_result['id'])
-    st.write("Summary: ", event_result['summary'])
-    st.write("Starts At: ", event_result['start']['dateTime'])
-    st.write("Ends At: ", event_result['end']['dateTime'])
+        full_description = eventDiscription
+        if url:
+            full_description += f"\nMore Info: {url}"
+        event_result = service.events().insert(calendarId=CalendarID,
+                                            body={
+                                                "summary": course_name + ' ' + eventDiscription + f'\n{full_description}',
+                                                "description": full_description,
+                                                "start": {"date": start.strftime("%Y-%m-%d")},
+                                                "end": {"date": (end + timedelta(days=1)).strftime("%Y-%m-%d")},
+                                            }
+                                            ).execute()
+    else:
+        event_result = service.events().insert(calendarId=CalendarID,
+                                            body={
+                                                "summary": 'Automated Event '+ eventDiscription,
+                                                "description": eventDiscription,
+                                                "start": {"dateTime": start, "timeZone": 'America/New_York'},
+                                                "end": {"dateTime": end, "timeZone": 'America/New_York'},
+                                            }
+                                            ).execute()
+
+    start_key = 'date' if all_day else 'dateTime'
+    end_key = 'date' if all_day else 'dateTime'
+
+    # st.write("Calendar Automation has created an event")
+    # st.write("Id: ", event_result['id'])
+    # st.write("Summary: ", event_result['summary'])
+    # st.write("Starts At: ", event_result['start'][start_key])
+    # st.write("Ends At: ", event_result['end'][end_key])
 
 options = ["Eating", "Vyvance", "Study", "Sleep", "Work", "Exercise", "Meditation", "Reading", "Coding", "Meeting", "Break", "Other"]
 

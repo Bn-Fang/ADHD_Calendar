@@ -4,6 +4,7 @@ from Cal import *
 from datetime import datetime, timedelta, time
 import base64
 import plotly.express as px
+from canvasTest import canvas
 
 
 st.sidebar.title("Settings")
@@ -290,10 +291,7 @@ with maker:
         
         if st.session_state.description == "Sleep":
             timeInput = [Presets[st.session_state.description][0], Presets[st.session_state.description][1],Presets[st.session_state.description][2], Presets[st.session_state.description][3]]
-        
-        
-        
-        
+
         with date:
             startDate = st.date_input("Select Date", key="startDate", value=timeInput[0])
             endDate = st.date_input("Select endDate", key="endDate", value=timeInput[1] )
@@ -312,6 +310,10 @@ with maker:
             print(st.session_state.description, start, end)
             create_event(st.session_state.calendarID,st.session_state.description, start, end)    
             st.write("Event Created")
+
+        canvas_button = st.button(label='Sync with Canvas')
+        if canvas_button:
+            canvas(st.session_state.calendarID)
             
     else:
         st.write("Please login to create events")
