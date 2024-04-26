@@ -159,14 +159,16 @@ def list_event(CalendarID):
     # print('Calendar ID: ', CalendarID, events_result['items'])
     for event in events:
         # start = event['start'].get('dateTime', event['start'].get('date'))
-        print( event)
+        # print("event: ", event)
         calenderItem = {
           "title": str(event['summary']),
         "color": event['colorId'] if 'colorId' in event else "#fca903",
         "start": event['start']['dateTime'] if 'dateTime' in event['start'] else event['start']['date'],
         "end": event['end']['dateTime'] if 'dateTime' in event['end'] != None else event['end']['date'],
         "resourceId": str(event['summary']).split(" | ")[1] if len(str(event['summary']).split(" | ")) > 1 else "a",
+        "allDay": False if 'dateTime' in event['start'] else True
         }
+        
         eventsOut.append(calenderItem)
     return eventsOut
         
@@ -229,13 +231,13 @@ def delete_event():
     print("Event deleted")
 
 
-def create_event(CalendarID, eventDiscription, start, end, all_day=False, course_name=None, url=None):
+def create_event(CalendarID, eventDiscription, start, end, allDay, conflictAllowed= False, course_name=None, url=None):
     # date = datetime.now().date()
     # today = datetime(date.year, date.month, date.day, 10) + timedelta(days=0)
     # start = today.isoformat()
     # end = (today + timedelta(hours=1)).isoformat()
     service = get_calendar_service()
-    if all_day:
+    if allDay:
         # Parse start and end dates if they are strings
         if isinstance(start, str):
             # This assumes the string is in a full datetime format with potential timezone information
@@ -257,15 +259,15 @@ def create_event(CalendarID, eventDiscription, start, end, all_day=False, course
     else:
         event_result = service.events().insert(calendarId=CalendarID,
                                             body={
-                                                "summary": 'Automated Event '+ eventDiscription,
-                                                "description": eventDiscription,
+                                                "summary": ' '+ eventDiscription,
+                                                "description": ("conflictAllowed" if conflictAllowed else "notAllowed" ),
                                                 "start": {"dateTime": start, "timeZone": 'America/New_York'},
                                                 "end": {"dateTime": end, "timeZone": 'America/New_York'},
                                             }
                                             ).execute()
 
-    start_key = 'date' if all_day else 'dateTime'
-    end_key = 'date' if all_day else 'dateTime'
+    start_key = 'date' if allDay else 'dateTime'
+    end_key = 'date' if allDay else 'dateTime'
 
     # st.write("Calendar Automation has created an event")
     # st.write("Id: ", event_result['id'])
@@ -281,7 +283,7 @@ def login():
         st.session_state.loggedIn = True
         st.session_state.calendarID = get_calendar_ID("Adhd")
         st.session_state.events = list_event(st.session_state.calendarID)
-        print("events", st.session_state.events)
+        # print("events", st.session_state.events)
         
         if st.sidebar.button("Logout"):
             os.remove('token.pickle')
@@ -293,3 +295,32 @@ def login():
         if st.sidebar.button("Login with Google", key="login"):
             get_calendar_service()
             
+def place_event(calenderID, eventDiscription, start, end):
+    eventlist = list_event(calenderID)
+    eventlist = [event for event in eventlist if not event['allDay']]
+    print (eventlist)
+    if len(eventlist) == 0:
+        print("no events")
+        return False
+    print (end, start)
+    eventDiff = datetime.strptime(end, "%Y-%m-%dT%H:%M:%S") - datetime.strptime(start,"%Y-%m-%dT%H:%M:%S")
+    
+    for i in range(len(eventlist)-1):
+        timeDiff = datetime.strptime(eventlist[i+1]['start'], "%Y-%m-%dT%H:%M:%S-04:00") - datetime.strptime(eventlist[i]['end'],"%Y-%m-%dT%H:%M:%S-04:00")
+        print(timeDiff)
+        if timeDiff > eventDiff:
+            
+            print("Time gap found")
+            print( datetime.strptime(eventlist[i]['end'],"%Y-%m-%dT%H:%M:%S-04:00"),
+                         datetime.strptime(eventlist[i]['end'],"%Y-%m-%dT%H:%M:%S-04:00") + eventDiff)
+            create_event(calenderID, 
+                         eventDiscription, 
+                         datetime.strptime(eventlist[i]['end'],"%Y-%m-%dT%H:%M:%S-04:00").isoformat(),
+                         (datetime.strptime(eventlist[i]['end'],"%Y-%m-%dT%H:%M:%S-04:00") + eventDiff).isoformat(), 
+                         False,
+                         False)
+            return True
+
+    create_event(calenderID, eventDiscription, datetime.strptime(eventlist[-1]['end'],"%Y-%m-%dT%H:%M:%S-04:00").isoformat(), 
+                 (datetime.strptime(eventlist[-1]['end'],"%Y-%m-%dT%H:%M:%S-04:00") + eventDiff).isoformat(), False)
+    return False    
