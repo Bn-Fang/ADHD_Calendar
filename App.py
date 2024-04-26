@@ -295,7 +295,7 @@ with viewer:
         custom_css=st.session_state.calendar_css,
         callbacks=["eventChange"],
         )
-        print(state)
+        # print(state)
         
     
 
