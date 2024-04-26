@@ -39,6 +39,6 @@ def canvas(calendar_id):
 
                 # Call the function to create the event on the calendar
                 # TODO: WE NEED TO MODIFY Cal.py TO ADD THE DESCRIPTION AND URL
-                create_event(calendarID, title, start, end, all_day=True, course_name=coursename, url=url)
+                create_event(calendarID, title, start, end, allDay=True, course_name=coursename, url=url)
 
                 print(f"Event created: {title} on {due_date}")
